@@ -60,12 +60,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        // Get an instance of the monitor
+        monitor = Monitor.getInstance();
+
         clientSocket = new Socket("localhost", PORT);
         oos = new ObjectOutputStream(clientSocket.getOutputStream());
         ois = new ObjectInputStream(clientSocket.getInputStream());
-        oos.writeObject(1);
 
-        fileNames = (String[]) ois.readObject();
+        fileNames = monitor.getSharedNames(clientSocket, ois, oos);
 
         // Load XML layout file
         Parent root = FXMLLoader.load(getClass().getResource("main_layout.fxml"));
@@ -77,9 +79,6 @@ public class Main extends Application {
         primaryStage.setTitle("R00147327- Distributed Systems Programming Project");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // Get an instance of the monitor
-        monitor = Monitor.getInstance();
 
         // Get lists of both files on client folder and files on shared folder
         ObservableList<String> sharedMusic = FXCollections.observableArrayList(fileNames);

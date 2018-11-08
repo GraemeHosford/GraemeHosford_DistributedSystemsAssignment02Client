@@ -37,6 +37,19 @@ public class Monitor implements MonitorInterface {
         return instance;
     }
 
+    @Override
+    public String[] getSharedNames(Socket clientSocket, ObjectInputStream ois, ObjectOutputStream oos) {
+
+        try {
+            oos.writeObject(1);
+            return (String[]) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     /**
      * Returns a String array with the names of all files in the client folder
      * @return A String array of the client folder file names

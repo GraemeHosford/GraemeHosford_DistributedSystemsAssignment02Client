@@ -6,6 +6,8 @@ import java.net.Socket;
 
 public interface MonitorInterface {
 
+    String[] getSharedNames(Socket clientSocket, ObjectInputStream ois, ObjectOutputStream oos);
+
     String[] getClientNames();
 
     byte[] getFile(String name, Socket clientSocket, ObjectInputStream ois, ObjectOutputStream oos);
