@@ -98,8 +98,8 @@ public class Main extends Application {
         clientMusicList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             playButton.setDisable(false);
 
-            if(oldValue != null && !oldValue.equals(newValue)) {
-                if(!oldValue.equals(newValue)) {
+            if (oldValue != null && !oldValue.equals(newValue)) {
+                if (!oldValue.equals(newValue)) {
                     playButton.setText("Play");
                 } else {
                     playButton.setText("Pause");
@@ -126,14 +126,7 @@ public class Main extends Application {
 
         // Start the thread used to monitor the shared folder for new files
         ClientSideCheckForChange clientSideFileChangeChecker = new ClientSideCheckForChange(clientSocket, ois, oos, () -> {
-
-            try {
-                oos.writeObject(1);
-                fileNames = (String[]) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
+            fileNames = monitor.getSharedNames(clientSocket, ois, oos);
             Platform.runLater(() -> sharedMusicList.setItems(FXCollections.observableArrayList(fileNames)));
         });
 
@@ -148,6 +141,7 @@ public class Main extends Application {
 
     /**
      * Uploads a selected file to the shared folder
+     *
      * @param stage The window to show the FileChooser in
      */
     private void uploadFile(Stage stage) {
@@ -158,7 +152,7 @@ public class Main extends Application {
 
         File file = fileChooser.showOpenDialog(stage);
 
-        if(file != null) {
+        if (file != null) {
 
             byte[] fileContents = null;
 
@@ -195,6 +189,7 @@ public class Main extends Application {
 
     /**
      * Plays a selected song from the client folder
+     *
      * @param songName The song selected to be played
      */
     private void playSong(String songName) {
@@ -203,14 +198,14 @@ public class Main extends Application {
         Media song = new Media(new File("local/" + songName).toURI().toString());
 
         // Creates a new player if necessary and sets behaviour for how thee play/pause button should act
-        if(player == null) {
+        if (player == null) {
             player = new MediaPlayer(song);
             player.play();
             playButton.setText("Pause");
             songPlaying = true;
         } else {
-            if(song.getSource().equals(player.getMedia().getSource())){
-                if(songPlaying) {
+            if (song.getSource().equals(player.getMedia().getSource())) {
+                if (songPlaying) {
                     player.stop();
                     playButton.setText("Play");
                     songPlaying = false;
@@ -220,7 +215,7 @@ public class Main extends Application {
                     playButton.setText("Pause");
                 }
             } else {
-                if(songPlaying) {
+                if (songPlaying) {
                     player.stop();
                 }
                 player = new MediaPlayer(song);

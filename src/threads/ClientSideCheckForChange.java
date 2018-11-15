@@ -1,8 +1,8 @@
 package threads;
 
+import controllers.Monitor;
 import interfaces.SonglistChangedListener;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -29,9 +29,7 @@ public class ClientSideCheckForChange extends Thread {
 
             while (true) {
 
-                oos.writeObject(2);
-
-                boolean songChanged = (boolean) ois.readObject();
+                boolean songChanged = Monitor.getInstance().checkSharedFilesChanged(clientSocket, ois, oos);
 
                 if (songChanged) {
                     songChangedListener.onSonglistChnaged();
@@ -40,7 +38,7 @@ public class ClientSideCheckForChange extends Thread {
                 Thread.sleep(20000);
 
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

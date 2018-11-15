@@ -93,4 +93,19 @@ public class Monitor implements MonitorInterface {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean checkSharedFilesChanged(Socket clientSocket, ObjectInputStream ois, ObjectOutputStream oos) {
+
+        boolean changed = false;
+
+        try {
+            oos.writeObject(2);
+            changed = (boolean) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return changed;
+    }
 }

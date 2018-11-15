@@ -14,4 +14,6 @@ public interface MonitorInterface {
 
     void uploadFile(String fileName, byte[] fileContents, Socket clientSocket, ObjectOutputStream oos);
 
+    boolean checkSharedFilesChanged(Socket clientSocket, ObjectInputStream ois, ObjectOutputStream oos);
+
 }
